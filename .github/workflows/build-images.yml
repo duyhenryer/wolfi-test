@@ -38,8 +38,8 @@ jobs:
       - name: Create melange.rsa from Github secret
         shell: bash
         env:
-          MELANGE_KEY: ${{ secrets.MELANGE_KEY }}
-        run: echo "${MELANGE_KEY}" > melange.rsa
+          MELANGE_PRIVATE_KEY: ${{ secrets.MELANGE_PRIVATE_KEY }}
+        run: echo "${MELANGE_PRIVATE_KEY}" > melange.rsa
 
       - name: Setup melange
         uses: chainguard-dev/actions/setup-melange@main

@@ -1,5 +1,6 @@
 # Ignore melange private key
 melange.rsa
+wolfi-melange.rsa
 
 # Node modules
 node_modules/
