@@ -42,11 +42,9 @@ jobs:
       - name: Setup cosign
         uses: sigstore/cosign-installer@v4.0.0
 
-      - name: Create wolfi-melange.rsa from Github secret
-        shell: bash
-        env:
-          MELANGE_KEY: ${{ secrets.MELANGE_KEY }}
-        run: echo "${MELANGE_KEY}" > wolfi-melange.rsa
+      - name: Get signing key
+        run: |
+          echo "${{ secrets.MELANGE_PRIVATE_KEY }}" | base64 -d > wolfi-melange.rsa
 
       - name: Setup melange
         uses: chainguard-dev/actions/setup-melange@main
