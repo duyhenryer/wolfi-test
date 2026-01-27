@@ -49,6 +49,8 @@ jobs:
           archs: x86_64,arm64
           sign-with-key: true
           signing-key-path: wolfi-melange.rsa
+          repository-append: https://wolfi.duyne.me
+          keyring-append: https://wolfi.duyne.me/wolfi-melange.rsa.pub
 
       - name: Build kubeconform package with Melange
         uses: chainguard-dev/actions/melange-build-pkg@main
@@ -57,6 +59,8 @@ jobs:
           archs: x86_64,arm64
           sign-with-key: true
           signing-key-path: wolfi-melange.rsa
+          repository-append: https://wolfi.duyne.me
+          keyring-append: https://wolfi.duyne.me/wolfi-melange.rsa.pub
 
       - name: Build flyway package with Melange
         uses: chainguard-dev/actions/melange-build-pkg@main
@@ -65,6 +69,8 @@ jobs:
           archs: x86_64,arm64
           sign-with-key: true
           signing-key-path: wolfi-melange.rsa
+          repository-append: https://wolfi.duyne.me
+          keyring-append: https://wolfi.duyne.me/wolfi-melange.rsa.pub
 
       - name: Upload packages
         uses: actions/upload-artifact@v6
