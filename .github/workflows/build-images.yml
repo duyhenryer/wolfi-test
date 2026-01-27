@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - 'images/**'
-      - 'packages/**'
+      - 'melange/**'
       - '.github/workflows/build-images.yml'
   workflow_dispatch:
   schedule:
@@ -47,21 +47,21 @@ jobs:
       - name: Build apkrane package with Melange
         uses: chainguard-dev/actions/melange-build-pkg@main
         with:
-          config: packages/package-apkrane.yaml
+          config: melange/package-apkrane.yaml
           archs: x86_64,arm64
           sign-with-key: true
 
       - name: Build kubeconform package with Melange
         uses: chainguard-dev/actions/melange-build-pkg@main
         with:
-          config: packages/package-kubeconform.yaml
+          config: melange/package-kubeconform.yaml
           archs: x86_64,arm64
           sign-with-key: true
 
       - name: Build flyway package with Melange
         uses: chainguard-dev/actions/melange-build-pkg@main
         with:
-          config: packages/package-flyway.yaml
+          config: melange/package-flyway.yaml
           archs: x86_64,arm64
           sign-with-key: true
 

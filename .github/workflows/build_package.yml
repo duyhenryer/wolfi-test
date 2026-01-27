@@ -7,7 +7,7 @@ on:
     tags:
       - 'v*'
     paths:
-      - 'packages/**'
+      - 'melange/**'
       - '.github/workflows/build_package.yml'
   workflow_dispatch:
   schedule:
@@ -54,14 +54,14 @@ jobs:
       - name: Build apkrane package with Melange
         uses: chainguard-dev/actions/melange-build-pkg@main
         with:
-          config: packages/package-apkrane.yaml
+          config: melange/package-apkrane.yaml
           archs: x86_64,arm64
           sign-with-key: true
 
       - name: Build kubeconform package with Melange
         uses: chainguard-dev/actions/melange-build-pkg@main
         with:
-          config: packages/package-kubeconform.yaml
+          config: melange/package-kubeconform.yaml
           archs: x86_64,arm64
           sign-with-key: true
 
@@ -88,7 +88,7 @@ jobs:
       - name: Build image with Apko
         uses: chainguard-images/actions/apko-publish@main
         with:
-          config: packages/melange-image.yaml
+          config: melange/melange-image.yaml
           tag: ${{ steps.tag.outputs.image-tag }}
           platforms: linux/amd64,linux/arm64
 
