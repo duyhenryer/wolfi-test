@@ -210,6 +210,18 @@ docker run --rm --privileged \
 
 You can use `melange` and `apko` to build images locally and load them directly into your container runtime.
 
+#### QEMU + binfmt
+```sh
+sudo apt update
+sudo apt install -y qemu-user-static binfmt-support
+```
+Check:
+
+```sh
+ls /proc/sys/fs/binfmt_misc | grep aarch64
+```
+
+---
 1. **Build the Package (Melange):**
 
    First, build the `.apk` package locally.
@@ -218,7 +230,7 @@ You can use `melange` and `apko` to build images locally and load them directly 
    podman run --rm --privileged -v "${PWD}":/work \
      cgr.dev/chainguard/melange build \
      melange/package-flyway.yaml \
-     --signing-key melange.rsa \
+     --signing-key wolfi-melange.rsa \
      --arch amd64,arm64
    ```
 

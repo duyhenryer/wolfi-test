@@ -29,5 +29,29 @@ Apko builds a container image containing a minimal OS `(Alpine/Wolfi)` plus your
 | Task                       | Tool      | Result                                      |
 |----------------------------|-----------|---------------------------------------------|
 | Compile and package app    | Melange   | Creates an `.apk` file containing your app  |
-
 | Create OCI container image | Apko      | Creates a container image from the `.apk`   |
+
+## Key Signing and Trust (The "Key-Lock" Model)
+
+To ensure security, Wolfi/Alpine uses a **Key-Lock** trust system to verify that packages haven't been tampered with.
+
+### 1. The "Key" (Private: `melange.rsa`)
+This is your **secret** signing key. You keep this safe (e.g., in GitHub Secrets).
+- **Role**: Signer
+- **Action**: When Melange builds a package, it uses this key to create a cryptographic signature on the `.apk` file. This signature says *"I, the owner of this private key, built this."*
+
+### 2. The "Lock" (Public: `melange.rsa.pub`)
+This is your **public** verification key. You distribute this to anyone who needs to install your packages (Apko, servers, users).
+- **Role**: Verifier
+- **Action**: When Apko (or `apk`) tries to install a package, it uses this public key to "unlock" or verify the signature.
+
+### The Trust Flow
+1. **Build**: Melange builds `package.apk` and signs it with `melange.rsa`.
+2. **Publish**: You upload `package.apk` AND `melange.rsa.pub` to your repository (`https://wolfi.duyne.me`).
+3. **Install**:
+    - Apko downloads `package.apk`.
+    - Apko looks at your configuration: `keyring: [https://wolfi.duyne.me/melange.rsa.pub]`.
+    - Apko downloads the public key.
+    - Apko checks: *Does the signature on this package match this public key?*
+        - **Yes** ✅: The package is trusted and installed.
+        - **No** ❌: The package is rejected.
