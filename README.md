@@ -203,3 +203,45 @@ docker run --rm --privileged \
   --signing-key melange.rsa \
   build packages/package-apkrane.yaml
 ```
+
+### Building Images Locally
+
+You can use `melange` and `apko` to build images locally and load them directly into your container runtime.
+
+1. **Build the Package (Melange):**
+
+   First, build the `.apk` package locally.
+
+   ```bash
+   podman run --rm --privileged -v "${PWD}":/work \
+     cgr.dev/chainguard/melange build \
+     packages/package-flyway.yaml \
+     --signing-key melange.rsa \
+     --arch amd64
+   ```
+
+2. **Build the Image (Apko):**
+
+   Use the local package to build the container image.
+
+   ```bash
+   podman run --rm -v "${PWD}":/work \
+     cgr.dev/chainguard/apko build \
+     images/flyway.yaml \
+     flyway:test \
+     output.tar \
+     --arch amd64
+   ```
+
+3. **Load into Podman/Docker:**
+
+   ```bash
+   podman load -i output.tar
+   ```
+
+4. **Run the Image:**
+
+   ```bash
+   podman run --rm docker.io/library/flyway:test-amd64 --version
+   ```
+

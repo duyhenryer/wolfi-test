@@ -7,6 +7,7 @@ contents:
     - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
     - melange.rsa.pub
   packages:
+    - busybox
     - bash
     - ca-certificates-bundle
     - openjdk-17-jre
@@ -16,7 +17,7 @@ environment:
   FLYWAY_VERSION: "11.8.2"
   FLYWAY_HOME: "/opt/flyway"
   FLYWAY_LOCATIONS: "filesystem:/opt/flyway/sql"
-  PATH: /usr/sbin:/sbin:/usr/bin:/bin:/usr/local/bin
+  PATH: /usr/lib/jvm/java-17-openjdk/bin:/usr/sbin:/sbin:/usr/bin:/bin:/usr/local/bin
   SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
 
 work-dir: /opt/flyway
