@@ -42,11 +42,11 @@ jobs:
       - name: Setup cosign
         uses: sigstore/cosign-installer@v4.0.0
 
-      - name: Create melange.rsa from Github secret
+      - name: Create wolfi-melange.rsa from Github secret
         shell: bash
         env:
           MELANGE_KEY: ${{ secrets.MELANGE_KEY }}
-        run: echo "${MELANGE_KEY}" > melange.rsa
+        run: echo "${MELANGE_KEY}" > wolfi-melange.rsa
 
       - name: Setup melange
         uses: chainguard-dev/actions/setup-melange@main
@@ -57,6 +57,7 @@ jobs:
           config: melange/package-apkrane.yaml
           archs: x86_64,arm64
           sign-with-key: true
+          signing-key-path: wolfi-melange.rsa
 
       - name: Build kubeconform package with Melange
         uses: chainguard-dev/actions/melange-build-pkg@main
@@ -64,6 +65,7 @@ jobs:
           config: melange/package-kubeconform.yaml
           archs: x86_64,arm64
           sign-with-key: true
+          signing-key-path: wolfi-melange.rsa
 
       # Simple tag generation
       - name: Generate image tag
