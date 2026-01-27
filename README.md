@@ -32,7 +32,9 @@ wolfi-test/
 │   ├── image-kubectl.yaml
 │   ├── image-k8s-tools.yaml
 │   └── image-flyway.yaml
-├── packages/              # APK package definitions
+
+├── packages/              # Build output directory (artifacts)
+├── melange/               # APK package definitions
 │   ├── package-apkrane.yaml
 │   ├── package-kubeconform.yaml
 │   ├── package-flyway.yaml
@@ -201,7 +203,7 @@ docker run --rm --privileged \
   cgr.dev/chainguard/melange \
   --arch x86_64 \
   --signing-key melange.rsa \
-  build packages/package-apkrane.yaml
+  build melange/package-apkrane.yaml
 ```
 
 ### Building Images Locally
@@ -215,9 +217,9 @@ You can use `melange` and `apko` to build images locally and load them directly 
    ```bash
    podman run --rm --privileged -v "${PWD}":/work \
      cgr.dev/chainguard/melange build \
-     packages/package-flyway.yaml \
+     melange/package-flyway.yaml \
      --signing-key melange.rsa \
-     --arch amd64
+     --arch amd64,arm64
    ```
 
 2. **Build the Image (Apko):**
@@ -230,7 +232,7 @@ You can use `melange` and `apko` to build images locally and load them directly 
      images/flyway.yaml \
      flyway:test \
      output.tar \
-     --arch amd64
+     --arch amd64,arm64
    ```
 
 3. **Load into Podman/Docker:**
