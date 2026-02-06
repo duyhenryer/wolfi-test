@@ -72,6 +72,16 @@ jobs:
           repository-append: https://wolfi.duyne.me
           keyring-append: https://wolfi.duyne.me/wolfi-melange.rsa.pub
 
+      - name: Build flyway12 package with Melange
+        uses: chainguard-dev/actions/melange-build-pkg@main
+        with:
+          config: melange/package-flyway12.yaml
+          archs: x86_64,arm64
+          sign-with-key: true
+          signing-key-path: wolfi-melange.rsa
+          repository-append: https://wolfi.duyne.me
+          keyring-append: https://wolfi.duyne.me/wolfi-melange.rsa.pub
+
       - name: Upload packages
         uses: actions/upload-artifact@v6
         with:
@@ -218,3 +228,27 @@ jobs:
         with:
           config: images/flyway.yaml
           tag: ghcr.io/${{ github.repository_owner }}/flyway:latest
+
+  build-flyway12:
+    runs-on: ubuntu-latest
+    needs: build-packages
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Download packages
+        uses: actions/download-artifact@v7
+        with:
+          name: packages
+          path: packages/
+
+      - name: Build flyway12 image
+        id: build-flyway12
+        uses: distroless/actions/apko-publish@main
+        with:
+          config: images/flyway12.yaml
+          tag: ghcr.io/${{ github.repository_owner }}/flyway12:latest

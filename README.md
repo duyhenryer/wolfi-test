@@ -31,13 +31,15 @@ wolfi-test/
 │   ├── image-aws-cli.yaml
 │   ├── image-kubectl.yaml
 │   ├── image-k8s-tools.yaml
-│   └── image-flyway.yaml
+│   ├── image-flyway.yaml
+│   └── image-flyway12.yaml
 
 ├── packages/              # Build output directory (artifacts)
 ├── melange/               # APK package definitions
 │   ├── package-apkrane.yaml
 │   ├── package-kubeconform.yaml
 │   ├── package-flyway.yaml
+│   ├── package-flyway12.yaml
 │   └── melange-image.yaml
 ├── docs.md               # Apko & Melange concepts
 ├── melange.rsa.pub       # Public signing key
@@ -55,6 +57,7 @@ wolfi-test/
 | **kubectl** | Kubernetes CLI tool | kubectl, bash | `ghcr.io/duyhenryer/kubectl:latest` |
 | **K8s Tools** | Kubernetes utilities (yq, kustomize, kubeconform) | yq, kustomize, kubeconform, bash | `ghcr.io/duyhenryer/k8s-tools:latest` |
 | **Flyway** | Database migration tool with OpenJDK 17 | bash, openjdk-17-jre, flyway | `ghcr.io/duyhenryer/flyway:latest` |
+| **Flyway 12** | Flyway 12 minimal (PostgreSQL-only, ~45% smaller) | bash, openjdk-17-jre, flyway12 | `ghcr.io/duyhenryer/flyway12:latest` |
 
 ## Testing Images
 
@@ -142,6 +145,25 @@ podman run --rm --pull=always \
     -e FLYWAY_USER=postgres \
     -e FLYWAY_PASSWORD=<YOUR_PASSWORD> \
     ghcr.io/duyhenryer/flyway:latest \
+    info
+```
+
+### Test Flyway 12 (Minimal)
+
+Flyway 12 is a minimal image with only PostgreSQL driver included (~45% smaller than the full Flyway image).
+
+```bash
+# Test Flyway 12 version
+podman run --rm --pull=always \
+    ghcr.io/duyhenryer/flyway12:latest --version
+
+# Test with PostgreSQL database connection
+podman run --rm --pull=always \
+    -v $(pwd)/sql:/opt/flyway12/sql \
+    -e FLYWAY_URL=jdbc:postgresql://host.docker.internal:5432/mydb \
+    -e FLYWAY_USER=postgres \
+    -e FLYWAY_PASSWORD=<YOUR_PASSWORD> \
+    ghcr.io/duyhenryer/flyway12:latest \
     info
 ```
 

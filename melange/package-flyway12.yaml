@@ -1,0 +1,90 @@
+---
+package:
+  name: flyway12
+  version: 12.0.0
+  epoch: 0
+  description: Flyway database migration tool (v12, minimal PostgreSQL-only)
+  copyright:
+    - license: Apache-2.0
+
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/os
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    packages:
+      - busybox
+      - ca-certificates-bundle
+      - openjdk-17-jre
+
+pipeline:
+  - uses: fetch
+    with:
+      uri: https://github.com/flyway/flyway/releases/download/flyway-${{package.version}}/flyway-commandline-${{package.version}}.tar.gz
+      expected-sha256: 68101ba4d2fec09f97392ee0f007fde220b29494c4ec39a56d5895c40ff25753
+
+  - name: Install Flyway 12 (minimal, PostgreSQL-only)
+    runs: |
+      set -e
+      FLYWAY_VERSION="${{package.version}}"
+      
+      # Extract Flyway (archive contains flyway-X.Y.Z/ directory)
+      tar -xzf "flyway-commandline-${FLYWAY_VERSION}.tar.gz"
+      
+      cd "flyway-${FLYWAY_VERSION}"
+      
+      # ===========================================
+      # PRUNE: Remove unnecessary files to reduce size
+      # ===========================================
+      
+      # Remove Windows scripts
+      rm -f flyway.cmd *.ps1 2>/dev/null || true
+      
+      # Remove all JDBC drivers EXCEPT PostgreSQL
+      # Keep: postgresql-*.jar
+      cd drivers
+      
+      # Remove driver subdirectories (cassandra, gcp, mongo, couchbase, aws, etc.)
+      rm -rf cassandra/ gcp/ mongo/ couchbase/ aws/ 2>/dev/null || true
+      
+      # Remove non-PostgreSQL driver JARs
+      find . -maxdepth 1 -type f -name "*.jar" ! -name "postgresql*.jar" -delete
+      
+      # Remove jffi native files (not needed for PostgreSQL)
+      rm -f jffi*.jar 2>/dev/null || true
+      
+      cd ..
+      
+      # ===========================================
+      # INSTALL: Use namespaced paths to avoid conflicts with flyway (v11)
+      # ===========================================
+      
+      cd ..
+      
+      # Move extracted directory to versioned, namespaced location
+      mkdir -p "${{targets.destdir}}/opt"
+      mv "flyway-${FLYWAY_VERSION}" "${{targets.destdir}}/opt/flyway12-${FLYWAY_VERSION}"
+      
+      # Make flyway executable
+      chmod +x "${{targets.destdir}}/opt/flyway12-${FLYWAY_VERSION}/flyway"
+      
+      # Create generic symlink for easier version management
+      ln -s "/opt/flyway12-${FLYWAY_VERSION}" "${{targets.destdir}}/opt/flyway12"
+      
+      # Create symlink in /usr/local/bin as flyway12 (not flyway, to avoid conflict)
+      mkdir -p "${{targets.destdir}}/usr/local/bin"
+      ln -s "/opt/flyway12-${FLYWAY_VERSION}/flyway" \
+        "${{targets.destdir}}/usr/local/bin/flyway12"
+
+test:
+  pipeline:
+    - runs: |
+        flyway12 --version
+
+update:
+  enabled: true
+  github:
+    identifier: flyway/flyway
+    strip-prefix: flyway-
+    tag-filter-prefix: flyway-12.
