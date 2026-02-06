@@ -57,4 +57,4 @@ update:
   github:
     identifier: flyway/flyway
     strip-prefix: flyway-
-    tag-filter-prefix: flyway-
+    tag-filter-prefix: flyway-11.
