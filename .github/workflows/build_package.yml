@@ -29,10 +29,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
+        uses: crazy-max/ghaction-import-gpg@v7
         with:
           gpg_private_key: ${{ secrets.BOT_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.BOT_PASSPHRASE }}
@@ -40,7 +40,7 @@ jobs:
           git_commit_gpgsign: true
           
       - name: Setup cosign
-        uses: sigstore/cosign-installer@v4.0.0
+        uses: sigstore/cosign-installer@v4.1.2
 
       - name: Get signing key
         run: |
@@ -100,7 +100,7 @@ jobs:
           echo "registry=${{ env.REGISTRY }}" >> $GITHUB_OUTPUT
           echo "repository=${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
 
-      - uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b60be9435f6e # v0.4
+      - uses: imjasonh/setup-crane@feee3b6bb0d4c68370f256a4502498c9227e5c6b # v0.7
 
       - id: digest
         name: Get digests for image and platforms
