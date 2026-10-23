@@ -25,10 +25,10 @@ jobs:
       id-token: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
+        uses: crazy-max/ghaction-import-gpg@v7
         with:
           gpg_private_key: ${{ secrets.BOT_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.BOT_PASSPHRASE }}
@@ -83,7 +83,7 @@ jobs:
           keyring-append: https://wolfi.duyne.me/wolfi-melange.rsa.pub
 
       - name: Upload packages
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: packages
           path: packages/
@@ -96,10 +96,10 @@ jobs:
       attestations: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
+        uses: crazy-max/ghaction-import-gpg@v7
         with:
           gpg_private_key: ${{ secrets.BOT_GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.BOT_PASSPHRASE }}
@@ -121,7 +121,7 @@ jobs:
       attestations: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Build apko image
         id: build-apko
@@ -138,7 +138,7 @@ jobs:
       attestations: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Build docker-dind image
         id: build-docker-dind
@@ -155,7 +155,7 @@ jobs:
       attestations: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Build aws-cli image
         id: build-aws-cli
@@ -172,7 +172,7 @@ jobs:
       attestations: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Build kubectl image
         id: build-kubectl
@@ -190,10 +190,10 @@ jobs:
       attestations: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Download packages
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: packages
           path: packages/
@@ -214,10 +214,10 @@ jobs:
       attestations: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Download packages
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: packages
           path: packages/
@@ -238,10 +238,10 @@ jobs:
       attestations: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Download packages
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: packages
           path: packages/
